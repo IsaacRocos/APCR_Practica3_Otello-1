@@ -1,7 +1,5 @@
-package otello;
-
 // Clase que representa al jugador no humano. Cuando le toca tirar, la clase Juego llama a 
-// su mï¿½todo run
+// su método run
 
 import java.util.ArrayList;
 
@@ -9,8 +7,8 @@ import java.util.ArrayList;
 public class JugadorMaquina extends Jugador {
 	boolean m_rojo; //vale true si es el jugador 1 (rojo)
 	private Tablero tablero;
-	private int MAXIMO_NIVEL=5; // Nivel de profundidad del ï¿½rbol de jugadas. A mayor nivel, mejor
-								// jugarï¿½ la mï¿½quina, pero el coste de cada tirada tambiï¿½n serï¿½ mayor
+	private int MAXIMO_NIVEL=5; // Nivel de profundidad del árbol de jugadas. A mayor nivel, mejor
+								// jugará la máquina, pero el coste de cada tirada también será mayor
 	
 	public JugadorMaquina(boolean rojo) {
 		m_rojo = rojo;
@@ -21,8 +19,7 @@ public class JugadorMaquina extends Jugador {
 	}
 	
 	public Movimiento run() {
-            System.out.println("Movimiento de maquina ...");
-		// Movimiento NO inteligente. La mï¿½quina tira en la primera casilla libre donde pueda hacerlo
+		// Movimiento NO inteligente. La máquina tira en la primera casilla libre donde pueda hacerlo
 		/*int fila, columna;
 		
 		try {
@@ -53,11 +50,11 @@ public class JugadorMaquina extends Jugador {
 		return m;
 	}
 	
-	// Funciï¿½n a partir de la que comienza el algoritmo Alfa Beta mediante llamadas recursivas
-	// al mï¿½todo alfabeta_recursivo. En el mï¿½todo alfabeta se procesa el nodo raï¿½z del ï¿½rbol,
+	// Función a partir de la que comienza el algoritmo Alfa Beta mediante llamadas recursivas
+	// al método alfabeta_recursivo. En el método alfabeta se procesa el nodo raíz del árbol,
 	// que es un nodo max
 	private Movimiento alfabeta() {
-		// Inicializaciï¿½n de los valores de alfa y beta como menos infinito y mï¿½s infinito respectivamente
+		// Inicialización de los valores de alfa y beta como menos infinito y más infinito respectivamente
 		int alfa=-Integer.MAX_VALUE;
 		int beta = Integer.MAX_VALUE;
 		
@@ -75,18 +72,18 @@ public class JugadorMaquina extends Jugador {
 		sucesores(tablero, filasS, columnasS, jugador);
 		int i=0;
 		// Vamos procesando los hijos hasta procesarlos todos o hasta que se produzca una poda
-		// (que se producirï¿½ si alfa>=beta)
+		// (que se producirá si alfa>=beta)
 		while (alfa < beta && i < filasS.size()) {
 			// Generamos un nuevo tablero en el que se refleje el movimiento del nodo hijo
 			Tablero nodo = new Tablero(tablero);
 			nodo.ponerFicha(columnasS.get(i), filasS.get(i), jugador);
 			// Y llamamos a alfabeta_recursivo para procesar dicho nodo.
 			int devuelto = alfabeta_recursivo(nodo, 1,!m_rojo,alfa,beta);
-			// alfa serï¿½ el mï¿½ximo entre el valor ya existente y el valor devuelto por
-			// alfabeta recursivo, porque el nodo raï¿½z es un nodo MAX
+			// alfa será el máximo entre el valor ya existente y el valor devuelto por
+			// alfabeta recursivo, porque el nodo raíz es un nodo MAX
 			if (devuelto > alfa) {
 				alfa = devuelto;
-				// En el nodo raï¿½z almacenamos el movimiento correspondiente al hijo mï¿½s prometedor
+				// En el nodo raíz almacenamos el movimiento correspondiente al hijo más prometedor
 				// (el de mayor alfa)
 				filaM = filasS.get(i);
 				columnaM = columnasS.get(i);
@@ -98,8 +95,8 @@ public class JugadorMaquina extends Jugador {
 		return new Movimiento(filaM, columnaM);
 	}
 	
-	// Mï¿½todo recursivo con el que se procesarï¿½n los nodos internos del ï¿½rbol y las hojas (todos los
-	// nodos menos la raï¿½z)
+	// Método recursivo con el que se procesarán los nodos internos del árbol y las hojas (todos los
+	// nodos menos la raíz)
 	private int alfabeta_recursivo(Tablero nodo, int nivel, boolean color, int alfa, int beta) {
 		int jugador = 2;
 		ArrayList<Integer> filasS = new ArrayList<Integer>();
@@ -107,7 +104,7 @@ public class JugadorMaquina extends Jugador {
 		
 		if (color) jugador = 1;
 		
-		// Si el nodo es un nodo hoja se evalï¿½a
+		// Si el nodo es un nodo hoja se evalúa
 		if (esHoja(nodo,nivel,jugador))
 			return funcionEvaluacion(nodo);
 		
@@ -123,7 +120,7 @@ public class JugadorMaquina extends Jugador {
 				Tablero nodo2 = new Tablero(nodo);
 				nodo2.ponerFicha(columnasS.get(i), filasS.get(i), jugador);
 				int devuelto = alfabeta_recursivo(nodo2, nivel+1,!color,alfa,beta);
-				// Como es un nodo max se actualiza el valor de alfa. Alfa serï¿½ el mï¿½ximo entre
+				// Como es un nodo max se actualiza el valor de alfa. Alfa será el máximo entre
 				// el valor ya existente y el devuelto por el hijo
 				if (devuelto > alfa) {
 					alfa = devuelto;
@@ -138,9 +135,9 @@ public class JugadorMaquina extends Jugador {
 		}
 		else // NODO MIN
 		{
-			// El procesamiento es exactamente igual que en el caso de un nodo MAX. Las ï¿½nicas diferencias
-			// son que se actualiza el valor de beta en lugar del valor de alfa (siendo beta el mï¿½nimo entre
-			// el valor que ya se tenï¿½a y el devuelto por la llamada recursiva para el hijo), que si no hay
+			// El procesamiento es exactamente igual que en el caso de un nodo MAX. Las únicas diferencias
+			// son que se actualiza el valor de beta en lugar del valor de alfa (siendo beta el mínimo entre
+			// el valor que ya se tenía y el devuelto por la llamada recursiva para el hijo), que si no hay
 			// poda se devuelve el valor de beta y que si hay poda se devuelve el valor de alfa
 			while (alfa < beta && i < filasS.size()) {
 				Tablero nodo2 = new Tablero(nodo);
@@ -156,27 +153,27 @@ public class JugadorMaquina extends Jugador {
 		}
 	}
 	
-	// Un nodo serï¿½ un nodo hoja y no serï¿½ evaluado si no tiene hijos (no se pueden realizar mï¿½s 
-	// movimientos). Esto sucederï¿½ o bien porque ha terminado la partida (el tablero estï¿½ lleno
-	// o ninguno de los jugadores puede tirar) o bien porque se ha alcanzado el mï¿½ximo nivel
-	// de profundidad establecido para el ï¿½rbol
+	// Un nodo será un nodo hoja y no será evaluado si no tiene hijos (no se pueden realizar más 
+	// movimientos). Esto sucederá o bien porque ha terminado la partida (el tablero está lleno
+	// o ninguno de los jugadores puede tirar) o bien porque se ha alcanzado el máximo nivel
+	// de profundidad establecido para el árbol
 	private boolean esHoja(Tablero nodo, int nivel, int jugador)
 	{
 		return (nivel == MAXIMO_NIVEL || nodo.estaLleno() || !nodo.puedeTirar(jugador)); 
 		
 	}
 	
-	// Funciï¿½n que evalï¿½a un nodo hoja, devolviendo un valor numï¿½rico que indica lo favorable
-	// que es la situaciï¿½n correspndiente al nodo hoja para la mï¿½quina. Cuanto mayor sea el valor
-	// mejor para la mï¿½quina
+	// Función que evalúa un nodo hoja, devolviendo un valor numérico que indica lo favorable
+	// que es la situación correspndiente al nodo hoja para la máquina. Cuanto mayor sea el valor
+	// mejor para la máquina
 	private int funcionEvaluacion(Tablero nodo) {
 		int i, j;
 		int valor = 0;
 		int jugador = 2;
 		if (m_rojo) jugador = 1;
 		
-		// Primero contamos el nï¿½mero de fichas de cada color, aï¿½adiendo uno por cada ficha
-		// del color de la mï¿½quina y restando 1 por cada ficha del color del jugador
+		// Primero contamos el número de fichas de cada color, añadiendo uno por cada ficha
+		// del color de la máquina y restando 1 por cada ficha del color del jugador
 		for (i=0;i<nodo.getCeldas();i++)
 			for (j=0;j<nodo.getCeldas();j++)
 				if (nodo.obtenerCasilla(i, j) != 0)
@@ -185,9 +182,9 @@ public class JugadorMaquina extends Jugador {
 					else
 						valor--;
 		
-		// Y ahora aï¿½adimos mucha puntuaciï¿½n si la mï¿½quina tiene fichas en la esquina, y quitamos
-		// mucha puntuaciï¿½n si el humano tiene fichas en las esquinas. En el juego del otelo
-		// tener fichas en la esquina da mucha ventaja estratï¿½gica
+		// Y ahora añadimos mucha puntuación si la máquina tiene fichas en la esquina, y quitamos
+		// mucha puntuación si el humano tiene fichas en las esquinas. En el juego del otelo
+		// tener fichas en la esquina da mucha ventaja estratégica
 		if (nodo.obtenerCasilla(0,0) != 0)
 		{
 			if (nodo.obtenerCasilla(0,0) == jugador)
@@ -220,7 +217,7 @@ public class JugadorMaquina extends Jugador {
 		return valor;
 	}
 	
-	// Mï¿½todo para determinar los posibles movimientos que puede realizar el jugador 'jugador' a partir
+	// Método para determinar los posibles movimientos que puede realizar el jugador 'jugador' a partir
 	// del tablero almacenado en 'nodo'
 	private void sucesores(Tablero nodo, ArrayList<Integer>filas, ArrayList<Integer>columnas, int jugador) {
 		int fila, columna;

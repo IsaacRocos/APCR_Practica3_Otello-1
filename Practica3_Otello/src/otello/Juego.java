@@ -1,6 +1,4 @@
-package otello;
-
-// Clase que controla el funcionamiento del juego (cuï¿½ndo le toca tirar a cada jugador, cuando
+// Clase que controla el funcionamiento del juego (cuándo le toca tirar a cada jugador, cuando
 // se acaba la partida, etc.)
 
 import javax.swing.JButton;
@@ -31,29 +29,27 @@ public class Juego extends Thread{
 		C.repaint();
 		
 		jugador1 = new JugadorHumano();
-		jugador2 = new JugadorMaquina(false); // El valor false indica que el jugador mï¿½quina juega
+		jugador2 = new JugadorMaquina(false); // El valor false indica que el jugador máquina juega
 											  // con las amarillas
 	}
 	
 	
-        @Override
 	public void run() {
 		inicializar();
-		          System.out.println("Tablero inicializado ...");
+		
 		boolean turno_rojo = true;
 		int color;
 		Movimiento m;
 		
-		// La partida se desarrolla hasta que el tablero estï¿½ lleno o ya no se puedan tirar mï¿½s veces
+		// La partida se desarrolla hasta que el tablero esté lleno o ya no se puedan tirar más veces
 		// (por ejemplo porque alguno de los jugadores se haya quedado sin fichas)
 		while(!t.estaLleno() && (t.puedeTirar(1) || t.puedeTirar(2)))
 		{
 			m = null;
 			color = 0;
-			// Lo que se hace realmente es esperar el movimiento devuelto por el mï¿½todo run tanto
-			// del humano como de la mï¿½quina
+			// Lo que se hace realmente es esperar el movimiento devuelto por el método run tanto
+			// del humano como de la máquina
 			if (turno_rojo) {
-                            System.out.println("Turno rojo:");
 				if (t.puedeTirar(1)) {
 					jugador1.setTablero(t);
 					jugador1.setCanvas(C);
@@ -63,7 +59,6 @@ public class Juego extends Thread{
 					System.out.println("El jugador rojo no puede tirar");
 				}
 			} else {
-                            System.out.println("Turno Amarillo:");
 				if (t.puedeTirar(2)) {
 					jugador2.setTablero(t);
 					m = jugador2.run();
@@ -75,7 +70,6 @@ public class Juego extends Thread{
 			turno_rojo = !turno_rojo;
 			
 			if (m!=null) {
-                                System.out.println("Procesando movimiento...");
 				t.ponerFicha(m.columna,m.fila,color);
 				C.setTablero(t);
 				C.repaint();
@@ -94,12 +88,8 @@ public class Juego extends Thread{
 			break;
 		}
 		
-		// Con esto la partida termina y se activa el botï¿½n de comenzar una nueva partida.
+		// Con esto la partida termina y se activa el botón de comenzar una nueva partida.
 		b1.setEnabled(true);
 		b2.setEnabled(false);
 	}
-        
-        public void terminarEjecucion(){
-            throw new RuntimeException("Juegofinalizado");
-        }
 }
